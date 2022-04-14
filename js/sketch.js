@@ -75,12 +75,20 @@ window.onload = function () {
   view.onFrame = (frame) => {
     // decay speed - this works well with the switch to each key press increasing the magnitude of velocity
     player.data.vel = player.data.vel.multiply(.99);
-    let hit = foods.hitTest(player.position);
-    console.log(hit);
-    if(hit) {
-      hit.item.remove();
-      player.radius += 1;
-    }
+   foods.children.forEach(food => {
+     if (food.intersects(player)) {
+       console.log('intersect');
+       if (food.radius < player.radius) {
+         if (food.radius > player.radius * .75) {
+           player.radius += food.radius * .5;
+         } else {
+
+           player.radius += food.radius * .1;
+         }
+         food.remove();
+        }
+     }
+   }); 
     player.setPosition(player.position.add(player.data.vel));
   }
 
